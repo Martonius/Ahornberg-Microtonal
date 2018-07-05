@@ -1,21 +1,33 @@
+RACK_DIR ?= ../..
+# ^ previously nonexistant...copied more than this from the Bidoo makefile arrangement.
 SLUG = Ahornberg
 VERSION = 0.5.1
 
-# FLAGS will be passed to both the C and C++ compiler
-FLAGS +=
-CFLAGS +=
-CXXFLAGS +=
-
-# Careful about linking to shared libraries, since you can't assume much about the user's environment and library search path.
-# Static libraries are fine.
-LDFLAGS +=
-
-# Add .cpp and .c files to the build
-SOURCES += $(wildcard src/*.cpp)
-
-# Add files to the ZIP package when running `make dist`
-# The compiled plugin is automatically added.
 DISTRIBUTABLES += $(wildcard LICENSE*) res
 
+FLAGS += -DUSE_KISS_FFT -Idep/include -I./src/dep/audiofile -I./src/dep/filters -I./src/dep/freeverb \
+ -I./src/dep/gist/libs/kiss_fft130 -I./src/dep/gist/src -I./src/dep/minimp3\
+ -I./src/dep/gist/src/mfcc -I./src/dep/gist/src/core -I./src/dep/gist/src/fft \
+ -I./src/dep/gist/src/onset-detection-functions -I./src/dep/gist/src/pitch
+
+include $(RACK_DIR)/arch.mk
+
+ifeq ($(ARCH), lin)
+	LDFLAGS += -L$(RACK_DIR)/dep/lib $(RACK_DIR)/dep/lib/libcurl.a
+endif
+
+ifeq ($(ARCH), mac)
+	LDFLAGS += -L$(RACK_DIR)/dep/lib $(RACK_DIR)/dep/lib/libcurl.a
+endif
+
+ifeq ($(ARCH), win)
+	LDFLAGS += -L$(RACK_DIR)/dep/lib -lcurl
+endif
+
+SOURCES = $(wildcard src/*.cpp src/dep/audiofile/*cpp src/dep/filters/*cpp src/dep/freeverb/*cpp src/dep/gist/src/*cpp \
+ src/dep/gist/libs/kiss_fft130/*c src/dep/gist/src/mfcc/*cpp src/dep/gist/src/core/*cpp src/dep/gist/src/fft/*cpp \
+ src/dep/gist/src/onset-detection-functions/*cpp src/dep/gist/src/pitch/*cpp)
+
 # Include the VCV plugin Makefile framework
-include ../../plugin.mk
+# was (include ../../plugin.mk) ...not sure if changing this made any difference
+include $(RACK_DIR)/plugin.mk
