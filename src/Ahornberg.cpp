@@ -4,7 +4,8 @@
 // The plugin-wide instance of the Plugin class
 Plugin *plugin;
 
-void init(rack::Plugin *p) {
+// below was changed from rack::Plugin *p
+void init(Plugin *p) {
 	plugin = p;
 	// The "slug" is the unique identifier for your plugin and must never change after release, so choose wisely.
 	// It must only contain letters, numbers, and characters "-" and "_". No spaces.
@@ -16,7 +17,9 @@ void init(rack::Plugin *p) {
 	p->manual = "https://github.com/Ahornberg/Ahornberg-Microtonal";
 
 	// For each module, specify the ModuleWidget subclass, manufacturer slug (for saving in patches), manufacturer human-readable name, module slug, and module name
-	p->addModel(createModel<EqualDivisionWidget>("Ahornberg", "EqualDivision", "EqualDivision", TUNER_TAG));
+	
+	//was simply modelEqualDivision
+	p->addModel(modelEqualDivision);
 
 	// Any other plugin initialization may go here.
 	// As an alternative, consider lazy-loading assets and lookup tables when your module is created to reduce startup times of Rack.
