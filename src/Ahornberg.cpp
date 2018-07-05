@@ -18,7 +18,7 @@ void init(Plugin *p) {
 
 	// For each module, specify the ModuleWidget subclass, manufacturer slug (for saving in patches), manufacturer human-readable name, module slug, and module name
 	
-	//was simply modelEqualDivision
+	//modelEqualDivision info was moved to EqualDivision.cpp
 	p->addModel(modelEqualDivision);
 
 	// Any other plugin initialization may go here.
